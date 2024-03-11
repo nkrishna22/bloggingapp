@@ -1,7 +1,7 @@
 package ravi.learning.bloggingapp.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ravi.learning.bloggingapp.model.Posts;
+import ravi.learning.bloggingapp.model.Post;
 
-public interface PostRepository extends JpaRepository<Posts, Long> {
+public interface PostRepository extends JpaRepository<Post, Long> {
 }

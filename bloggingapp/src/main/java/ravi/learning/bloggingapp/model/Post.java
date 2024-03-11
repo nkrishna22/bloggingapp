@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 
 @Table
         (name="posts", uniqueConstraints = {@UniqueConstraint(columnNames = {"title"})})
-public class Posts extends BaseModel {
+public class Post extends BaseModel {
     @Column(nullable = false,unique = true)
     private String title;
     @Column(nullable = false)
