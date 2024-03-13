@@ -1,5 +1,7 @@
 package ravi.learning.bloggingapp.service;
-
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ravi.learning.bloggingapp.dto.PostDto;
 import ravi.learning.bloggingapp.exception.ResourceNotFound;
@@ -28,10 +30,12 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public List<PostDto> getAllPosts() {
+    public List<PostDto> getAllPosts(int pageNo, int pageSize) {
         List<Post> allPosts = postRepository.findAll();
-
-        List<PostDto> postDtos = allPosts.stream().map((x) -> postMapper.convertToPostDto(x)).collect(Collectors.toList());
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<Post> posts = postRepository.findAll(pageable);
+        List<Post> listOfPosts = posts.getContent();
+        List<PostDto> postDtos = listOfPosts.stream().map((x) -> postMapper.convertToPostDto(x)).collect(Collectors.toList());
         return postDtos;
     }
 
