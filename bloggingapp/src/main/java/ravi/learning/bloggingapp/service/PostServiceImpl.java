@@ -29,6 +29,7 @@ public class PostServiceImpl implements PostService{
         return postMapper.convertToPostDto(savedPost);
     }
 
+    //adding pagination support
     @Override
     public List<PostDto> getAllPosts(int pageNo, int pageSize) {
         List<Post> allPosts = postRepository.findAll();
