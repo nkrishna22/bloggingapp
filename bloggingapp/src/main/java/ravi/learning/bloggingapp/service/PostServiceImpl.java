@@ -2,6 +2,7 @@ package ravi.learning.bloggingapp.service;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ravi.learning.bloggingapp.dto.PostDto;
 import ravi.learning.bloggingapp.dto.PostResponse;
@@ -32,9 +33,9 @@ public class PostServiceImpl implements PostService{
 
     //adding pagination support
     @Override
-    public PostResponse getAllPosts(int pageNo, int pageSize) {
+    public PostResponse getAllPosts(int pageNo, int pageSize, String sortBy) {
         List<Post> allPosts = postRepository.findAll();
-        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
         Page<Post> posts = postRepository.findAll(pageable);
         List<Post> listOfPosts = posts.getContent();
         List<PostDto> postDtos = listOfPosts.stream().map((x) -> postMapper.convertToPostDto(x)).collect(Collectors.toList());
