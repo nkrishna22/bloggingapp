@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ravi.learning.bloggingapp.dto.PostDto;
+import ravi.learning.bloggingapp.dto.PostResponse;
 import ravi.learning.bloggingapp.service.PostService;
 
 import java.util.List;
@@ -25,10 +26,10 @@ public class PostController {
 
     // create Get API to get all Posts
     @GetMapping("")
-    public ResponseEntity<List<PostDto>> getAllPosts(@RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-                                                     @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize
+    public ResponseEntity<PostResponse> getAllPosts(@RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+                                                    @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize
                                                      ) {
-        List<PostDto> allPostDtos = postService.getAllPosts(pageNo, pageSize);
+        PostResponse allPostDtos = postService.getAllPosts(pageNo, pageSize);
 
         return ResponseEntity.ok(allPostDtos);
     }
