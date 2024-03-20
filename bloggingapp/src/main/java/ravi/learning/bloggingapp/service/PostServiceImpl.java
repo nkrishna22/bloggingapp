@@ -33,9 +33,12 @@ public class PostServiceImpl implements PostService{
 
     //adding pagination support
     @Override
-    public PostResponse getAllPosts(int pageNo, int pageSize, String sortBy) {
+    public PostResponse getAllPosts(int pageNo, int pageSize, String sortBy, String sortDir) {
         List<Post> allPosts = postRepository.findAll();
-        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+
+        Sort sort = sortBy.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
         Page<Post> posts = postRepository.findAll(pageable);
         List<Post> listOfPosts = posts.getContent();
         List<PostDto> postDtos = listOfPosts.stream().map((x) -> postMapper.convertToPostDto(x)).collect(Collectors.toList());
