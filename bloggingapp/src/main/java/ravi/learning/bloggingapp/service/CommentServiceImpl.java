@@ -1,6 +1,7 @@
 package ravi.learning.bloggingapp.service;
 
 
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import ravi.learning.bloggingapp.dto.CommentDto;
 import ravi.learning.bloggingapp.exception.BlogAPIException;
@@ -17,27 +18,27 @@ import java.util.stream.Collectors;
 public class CommentServiceImpl implements CommentService {
     private CommentRepository commentRepository;
     private PostRepository postRepository;
-    private CommentMapper commentMapper;
+    private ModelMapper mapper;
 
-    public CommentServiceImpl(CommentRepository commentRepository, PostRepository postRepository, CommentMapper commentMapper) {
+    public CommentServiceImpl(CommentRepository commentRepository, PostRepository postRepository, ModelMapper mapper) {
 
         this.commentRepository = commentRepository;
         this.postRepository = postRepository;
-        this.commentMapper = commentMapper;
+        this.mapper = mapper;
     }
     @Override
     public CommentDto createComment(Long postId, CommentDto commentDto) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new ResourceNotFound("Post", "id", postId));
-        Comment comment = commentMapper.covertToComment(commentDto);
+        Comment comment = mapper.map(commentDto, Comment.class);
         comment.setPost(post);
         Comment savedComment = commentRepository.save(comment);
-        return commentMapper.convertToDto(savedComment);
+        return mapper.map(savedComment, CommentDto.class);
     }
 
     @Override
     public List<CommentDto> getCommentsByPostId(Long postId) {
         List<Comment> comments = commentRepository.findByPostId(postId);
-        return comments.stream().map((comment) -> commentMapper.convertToDto(comment)).collect(Collectors.toList());
+        return comments.stream().map((comment) -> mapper.map(comment, CommentDto.class)).collect(Collectors.toList());
     }
 
     @Override
@@ -49,7 +50,7 @@ public class CommentServiceImpl implements CommentService {
             throw new BlogAPIException(HttpStatus.BAD_REQUEST, "Comment does not belong to post");
         }
 
-        return commentMapper.convertToDto(comment);
+        return mapper.map(comment, CommentDto.class);
     }
 
     @Override
@@ -67,7 +68,7 @@ public class CommentServiceImpl implements CommentService {
         comment.setBody(commentDto.getBody());
         commentRepository.save(comment);
 
-        return commentMapper.convertToDto(comment);
+        return mapper.map(comment, CommentDto.class);
     }
 
     @Override
