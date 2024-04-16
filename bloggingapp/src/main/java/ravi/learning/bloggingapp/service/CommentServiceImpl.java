@@ -70,4 +70,16 @@ public class CommentServiceImpl implements CommentService {
         return commentMapper.convertToDto(comment);
     }
 
+    @Override
+    public void deleteComment(Long postId, Long commentId) {
+        Post post = postRepository.findById(postId).orElseThrow(() -> new ResourceNotFound("Post", "id", postId));
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new ResourceNotFound("Comment", "id", commentId));
+
+        if(comment.getPost().getId() != post.getId()) {
+            throw new BlogAPIException(HttpStatus.BAD_REQUEST, "Comment does not belong to a post");
+        }
+
+        commentRepository.delete(comment);
+    }
+
 }
