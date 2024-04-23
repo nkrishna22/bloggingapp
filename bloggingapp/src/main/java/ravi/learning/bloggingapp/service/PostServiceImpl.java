@@ -1,4 +1,5 @@
 package ravi.learning.bloggingapp.service;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,18 +18,18 @@ import java.util.stream.Collectors;
 @Service
 public class PostServiceImpl implements PostService{
     private PostRepository postRepository;
-    private PostMapper postMapper;
+    private ModelMapper mapper;
 
-    public PostServiceImpl(PostRepository postRepository, PostMapper postMapper) {
+    public PostServiceImpl(PostRepository postRepository, ModelMapper mapper) {
         this.postRepository = postRepository;
-        this.postMapper = postMapper;
+        this.mapper = mapper;
     }
 
     @Override
     public PostDto createPost(PostDto postDto) {
-        Post post = postMapper.convertToPost(postDto);
+        Post post = mapper.map(postDto, Post.class);
         Post savedPost = postRepository.save(post);
-        return postMapper.convertToPostDto(savedPost);
+        return mapper.map(savedPost, PostDto.class);
     }
 
     //adding pagination support
@@ -41,7 +42,7 @@ public class PostServiceImpl implements PostService{
         Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
         Page<Post> posts = postRepository.findAll(pageable);
         List<Post> listOfPosts = posts.getContent();
-        List<PostDto> postDtos = listOfPosts.stream().map((x) -> postMapper.convertToPostDto(x)).collect(Collectors.toList());
+        List<PostDto> postDtos = listOfPosts.stream().map((x) -> mapper.map(x, PostDto.class)).collect(Collectors.toList());
 
         PostResponse postResponse = new PostResponse();
         postResponse.setContent(postDtos);
@@ -57,7 +58,7 @@ public class PostServiceImpl implements PostService{
     @Override
     public PostDto getPostById(Long id) {
         Post getPost = postRepository.findById(id).orElseThrow(() -> new ResourceNotFound("Post", "id", id));
-        return postMapper.convertToPostDto(getPost);
+        return mapper.map(getPost, PostDto.class);
     }
 
     @Override
@@ -69,7 +70,7 @@ public class PostServiceImpl implements PostService{
 
         Post updatedPost = postRepository.save(post);
 
-        return postMapper.convertToPostDto(updatedPost);
+        return mapper.map(updatedPost, PostDto.class);
     }
 
     @Override
