@@ -1,5 +1,6 @@
 package ravi.learning.bloggingapp.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ public class PostController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<PostDto> createPost(@RequestBody PostDto postDto) {
+    public ResponseEntity<PostDto> createPost(@Valid @RequestBody PostDto postDto) {
         PostDto postDto1 = postService.createPost(postDto);
         return new ResponseEntity<>(postDto1, HttpStatus.CREATED);
     }
@@ -46,7 +47,7 @@ public class PostController {
 
     // create Update Post by ID API
     @PutMapping("/{id}")
-    public ResponseEntity<PostDto> updatePost(@PathVariable("id") Long postId, @RequestBody PostDto postDto) {
+    public ResponseEntity<PostDto> updatePost(@PathVariable("id") Long postId, @Valid @RequestBody PostDto postDto) {
         PostDto updatedPostDto = postService.updatePost(postId, postDto);
         return ResponseEntity.ok(updatedPostDto);
     }
