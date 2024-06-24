@@ -3,6 +3,7 @@ package ravi.learning.bloggingapp.service;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 import ravi.learning.bloggingapp.dto.CommentDto;
 import ravi.learning.bloggingapp.exception.BlogAPIException;
 import ravi.learning.bloggingapp.exception.ResourceNotFound;
@@ -14,6 +15,7 @@ import ravi.learning.bloggingapp.repository.PostRepository;
 
 import java.util.List;
 import java.util.stream.Collectors;
+@Service
 
 public class CommentServiceImpl implements CommentService {
     private CommentRepository commentRepository;
